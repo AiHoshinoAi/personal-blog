@@ -4,7 +4,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { site } from "@/lib/site-data";
 
 const links = [
-  { href: "#works", label: "在做" },
+  { href: "#works", label: "做过" },
   { href: "#logs", label: "近况" },
   { href: "#about", label: "关于" },
   { href: "#contact", label: "联系" },

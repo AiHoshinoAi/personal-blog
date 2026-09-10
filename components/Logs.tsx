@@ -10,7 +10,7 @@ export function Logs() {
             近况
           </h2>
           <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-muted md:text-base">
-            最近在做的几件事，横向可以滑动。
+            毕业这一年多，几个还算重要的节点，横向可以滑动。
           </p>
         </Reveal>
 

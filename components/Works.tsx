@@ -120,10 +120,10 @@ export function Works() {
       <div className="shell section-y">
         <Reveal>
           <h2 className="text-[clamp(2rem,4.6vw,3.3rem)] font-medium leading-[1.04] tracking-[-0.035em] text-ink">
-            在做的东西
+            做过的东西
           </h2>
           <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-muted md:text-base">
-            每一个都先解决我自己的问题，再考虑要不要给别人用。
+            上一份工作里从零搭起来的几样东西。新公司的项目还没到能写出来的时候。
           </p>
         </Reveal>
 

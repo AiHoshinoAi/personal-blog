@@ -11,3 +11,4 @@ next-env.d.ts
 dist/*
 # 打包产物（内含 .env，绝不进仓库）
 /dist/
+tmp/

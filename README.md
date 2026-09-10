@@ -80,12 +80,11 @@ HOSHINO_AGENT_TARGETS=[
 
 已经填好的真实信息：`site.city`（南京）、`site.role`（AI 产品工程师）、`site.birth`（2003-09-03）、`site.email`（wthywanxiang@gmail.com）、`site.repo`（本仓库地址，渲染在「联系」区）、`beian.icp`。
 
-**还需要你替换的**：`projects`（4 条）与 `logs`（4 条）目前是按你的方向写的示例条目，换成你真实做过的事；图片仍是 `picsum.photos` 占位图，共 4 处：
+**还需要你替换的**：`projects` 与 `logs` 已按真实经历填写（上一份工作从零搭的 AI 中台，雇主未点名；新公司项目到位后再补条目）。图片仍是 `picsum.photos` 占位图，共 3 处：
 
-1. 在做的东西 · 观星笔记（大图）
-2. 在做的东西 · 小星座（竖图）
-3. 在做的东西 · 对话原型（宽图）
-4. 关于我 · 肖像
+1. 做过的东西 · 公司 AI 中台（大图）
+2. 做过的东西 · LLM 网关（竖图）
+3. 关于我 · 肖像
 
 把真实图片放进 `public/images/`，再把 `lib/site-data.ts` 里的 URL 换成 `/images/xxx.jpg`（About 那处在 `components/About.tsx`）。
 
