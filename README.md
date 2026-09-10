@@ -64,7 +64,7 @@ HOSHINO_AGENT_TARGETS=[
 
 全站文案集中在 [`lib/site-data.ts`](./lib/site-data.ts)：城市、职业、出生日期、邮箱、项目、近况、备案号都在那一个文件里，改它不用动组件。
 
-已经填好的真实信息：`site.city`（南京）、`site.role`（AI 产品工程师）、`site.birth`（2003-09-03）、`site.email`（wthywanxiang@gmail.com）、`beian.icp`。
+已经填好的真实信息：`site.city`（南京）、`site.role`（AI 产品工程师）、`site.birth`（2003-09-03）、`site.email`（wthywanxiang@gmail.com）、`site.repo`（本仓库地址，渲染在「联系」区）、`beian.icp`。
 
 **还需要你替换的**：`projects`（4 条）与 `logs`（4 条）目前是按你的方向写的示例条目，换成你真实做过的事；图片仍是 `picsum.photos` 占位图，共 4 处：
 

@@ -42,6 +42,12 @@ export const site = {
     body: "不太想把个人网站做成简历。这里放着我在做的东西、一些零散的记录，还有一个只有口令能进的小工具。",
   },
   email: "wthywanxiang@gmail.com",
+  /** 本站源码的开源仓库。label 是链接文字，handle 是仓库名 */
+  repo: {
+    label: "开源仓库",
+    handle: "AiHoshinoAi/personal-blog",
+    href: "https://github.com/AiHoshinoAi/personal-blog",
+  },
 } as const;
 
 export const projects: Project[] = [
