@@ -46,6 +46,20 @@ HOSHINO_AGENT_TARGETS=[
 - 每个来源 IP 在 5 分钟内最多试 8 次（所有入口共用这个额度），超出返回 429。
 - 因为按钮列表来自运行时环境变量，首页改成按需渲染（`app/page.tsx` 里的 `force-dynamic`）：改完 env 重启服务就生效，不用重新 build。
 
+### 打部署包
+
+```bash
+./scripts/pack.sh
+```
+
+产出 `dist/hoshino-blog-<时间>.tar.gz`（含 `.sha256`）：Next standalone 产物 + 启动器 + 从 `.env` 里挑出的本站变量。目标机只要有 Node 20.9+，`tar xzf` 后 `node doctor.mjs && node start.mjs` 就能跑，不需要 npm install。
+
+脚本会顺手做两件事：把 macOS 专用的 `sharp` 剥掉（本站没用 `next/image`，剥掉后包里原生文件数为 0，Linux x64 / ARM / Alpine 通用，包体也从 12MB 降到 3.7MB），以及检查包里是否残留原生二进制并打印数量。
+
+**必须用 `node start.mjs` 启动，不能直接 `node server.js`**：Next 的 standalone 入口不读 `.env`（那是 `next start` 的行为），直接跑会拿不到口令配置，首屏不渲染入口按钮、接口一律 503。
+
+`dist/` 已在 `.gitignore` 里，且包内含真实口令，别提交也别外发。换环境变量来源：`ENV_FILE=.env.local ./scripts/pack.sh`。
+
 ### 环境变量放哪里
 
 | 场景 | 做法 |

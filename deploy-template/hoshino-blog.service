@@ -1,0 +1,29 @@
+[Unit]
+Description=hoshino 星野 个人主页
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hoshino
+Group=hoshino
+WorkingDirectory=/opt/hoshino/hoshino-blog
+# 口令与入口由 WorkingDirectory 下的 .env 提供（start.mjs 读取）；
+# 换配置后 systemctl restart hoshino-blog 即生效，不需要重新构建。
+Environment=NODE_ENV=production
+Environment=PORT=3111
+Environment=HOSTNAME=127.0.0.1
+ExecStart=/usr/bin/env node start.mjs
+Restart=always
+RestartSec=3
+TimeoutStopSec=10
+# .env 里有口令，权限收紧到属主可读
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/hoshino/hoshino-blog/.next
+
+[Install]
+WantedBy=multi-user.target
