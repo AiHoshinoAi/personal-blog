@@ -30,7 +30,6 @@ export const metadata: Metadata = {
     locale: "zh_CN",
   },
   twitter: { card: "summary", title: `${site.latin} ${site.cjk}`, description: site.tagline },
-  icons: { icon: "/icon" },
 };
 
 export const viewport: Viewport = {
