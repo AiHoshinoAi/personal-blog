@@ -1,0 +1,416 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════════════
+   hoshino / 星野  ·  design tokens
+   -----------------------------------------------------------------------
+   ONE theme system, two modes (night = default, day = opt-in).
+   Sections never invert: every surface is derived from these tokens.
+   Corner radius is locked to 0 (sky-atlas print geometry). Circles are
+   reserved for one-off glyphs (toggle knob, status-free).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@custom-variant day (&:where([data-mode="day"], [data-mode="day"] *));
+
+@theme inline {
+  --font-display: "Space Grotesk Variable", "PingFang SC", "Hiragino Sans GB",
+    "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", ui-sans-serif,
+    sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo,
+    monospace;
+
+  --color-bg: var(--bg);
+  --color-deep: var(--bg-deep);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-faint: var(--ink-faint);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-text: var(--accent-text);
+}
+
+:root,
+[data-mode="night"] {
+  color-scheme: dark;
+
+  --bg: #06080f;
+  --bg-deep: #03050a;
+  --surface: #0a0e1a;
+  --surface-raised: #101627;
+
+  --line: rgba(226, 235, 252, 0.1);
+  --line-strong: rgba(226, 235, 252, 0.22);
+
+  --ink: #eef2fb;
+  --ink-muted: #a3aec9;
+  --ink-faint: #7d89a4;
+
+  --accent: #f0b64f;
+  --accent-ink: #12100a; /* text sitting on accent fill */
+  --accent-text: #f6cd80; /* accent used as text on bg */
+
+  --star-alpha: 1;
+  --grain-alpha: 0.045;
+  --plate-veil: rgba(6, 8, 15, 0.56);
+  --plate-deep: rgba(3, 5, 10, 0.9);
+  --plate-bright: 0.7;
+  --glow: color-mix(in oklab, var(--accent) 12%, transparent);
+}
+
+[data-mode="day"] {
+  color-scheme: light;
+
+  --bg: #e9edf4; /* cold silver paper, not cream */
+  --bg-deep: #dfe5ef;
+  --surface: #f6f8fc;
+  --surface-raised: #fbfcfe;
+
+  --line: rgba(12, 17, 32, 0.12);
+  --line-strong: rgba(12, 17, 32, 0.26);
+
+  --ink: #0c1120;
+  --ink-muted: #4c5875;
+  --ink-faint: #57627a;
+
+  --accent: #a3660c;
+  --accent-ink: #fdf8ef;
+  --accent-text: #7d4e07;
+
+  --star-alpha: 0;
+  --grain-alpha: 0.03;
+  --plate-veil: rgba(223, 229, 239, 0.5);
+  --plate-deep: rgba(203, 212, 228, 0.86);
+  --plate-bright: 0.94;
+  --glow: color-mix(in oklab, var(--accent) 11%, transparent);
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    scroll-behavior: smooth;
+    /* anchors clear the sticky header */
+    scroll-padding-top: 104px;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-display);
+    color: var(--ink);
+    background-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* clip 而不是 hidden：hidden 会让 body 变成滚动容器，粘顶导航会失效 */
+    overflow-x: clip;
+  }
+
+  /* horizon airglow: the one atmospheric device on the page */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(125% 55% at 50% 112%, var(--glow), transparent 68%),
+      linear-gradient(to bottom, var(--bg-deep) 0%, var(--bg) 42%, var(--bg) 100%);
+    transition: background 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  button,
+  input {
+    font: inherit;
+    color: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@utility shell {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 20px;
+
+  @media (min-width: 768px) {
+    padding-inline: 40px;
+  }
+
+  @media (min-width: 1280px) {
+    padding-inline: 56px;
+  }
+}
+
+@utility section-y {
+  padding-block: clamp(80px, 11vw, 168px);
+}
+
+/* Film grain: fixed, non-interactive, never on a scrolling container. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: var(--grain-alpha);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  transition: opacity 700ms ease;
+}
+
+/* Duotone plate: photography is desaturated then veiled in the brand accent,
+   so every image on the page speaks the same colour language. */
+.plate {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface-raised);
+  isolation: isolate;
+}
+
+.plate img {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.12) brightness(var(--plate-bright));
+  transform: scale(1.001);
+  transition:
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 600ms ease;
+}
+
+.plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    /* 地平线方向的暖色光污染，压在每张图的下沿 */
+    linear-gradient(
+      to top,
+      color-mix(in oklab, var(--accent) 17%, transparent) 0%,
+      transparent 24%
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--bg-deep) 50%, transparent) 0%,
+      var(--plate-veil) 44%,
+      var(--plate-deep) 100%
+    );
+  opacity: 1;
+  transition: opacity 600ms ease;
+}
+
+.group\/plate:hover .plate img,
+.group\/plate:focus-visible .plate img {
+  transform: scale(1.045);
+  filter: grayscale(0.2) contrast(1.02) brightness(1);
+}
+
+.group\/plate:hover .plate::after,
+.group\/plate:focus-visible .plate::after {
+  opacity: 0.42;
+}
+
+/* The one repeating surface treatment: a hairline frame that lights up on hover. */
+.frame {
+  border: 1px solid var(--line);
+  transition: border-color 400ms ease, background-color 400ms ease;
+}
+
+.frame:hover {
+  border-color: color-mix(in oklab, var(--accent) 55%, var(--line-strong));
+}
+
+/* Horizontal log strip: scroll-snap, hidden scrollbar, keyboard reachable. */
+.logstrip {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.logstrip::-webkit-scrollbar {
+  display: none;
+}
+
+.logstrip > * {
+  scroll-snap-align: start;
+  flex: 0 0 min(420px, 82vw);
+}
+
+/* 口令窗口：毛玻璃面板（web 近似的 frosted glass，非任何官方规范）。
+   提供 prefers-reduced-transparency 下的实心回退。 */
+.gate-veil {
+  background: color-mix(in oklab, var(--bg-deep) 80%, transparent);
+  backdrop-filter: blur(3px) saturate(105%);
+  -webkit-backdrop-filter: blur(3px) saturate(105%);
+}
+
+.gate-panel {
+  border: 1px solid var(--line-strong);
+  background: color-mix(in oklab, var(--surface) 95%, transparent);
+  padding: 26px;
+  backdrop-filter: blur(26px) saturate(165%);
+  -webkit-backdrop-filter: blur(26px) saturate(165%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 12%, transparent),
+    0 40px 90px -30px rgba(0, 0, 0, 0.68);
+}
+
+@media (min-width: 640px) {
+  .gate-panel {
+    padding: 32px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .gate-veil {
+    background: var(--bg-deep);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .gate-panel {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+
+/* ── 入场动效 ───────────────────────────────────────────────────────────
+   全部只在 prefers-reduced-motion: no-preference 下存在。
+   滚动入场（.reveal）的隐藏态由 JS 在挂载后按需加，HTML 本身始终可见。 */
+.reveal {
+  transition:
+    opacity 760ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 760ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-armed {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .letter {
+    animation: letter-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 55ms + 120ms);
+  }
+
+  .rule-draw {
+    transform-origin: left center;
+    animation: rule-draw 1400ms cubic-bezier(0.16, 1, 0.3, 1) 620ms both;
+  }
+
+  .soft-rise {
+    animation: soft-rise 820ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .plate-in {
+    animation: plate-in 1500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes letter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.36em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes soft-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes plate-in {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 主题切换按钮：两个图标常驻 DOM，靠 data-mode 交叉淡入旋转。
+   这样即使 JS 没跑起来，按钮上也是当前模式对应的图标。 */
+.toggle-glyph {
+  display: grid;
+  place-items: center;
+}
+
+.toggle-glyph > svg {
+  grid-area: 1 / 1;
+  transition:
+    opacity 320ms ease,
+    transform 460ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-mode="night"] .toggle-day {
+  opacity: 0;
+  transform: rotate(-40deg) scale(0.7);
+}
+
+[data-mode="night"] .toggle-night,
+[data-mode="day"] .toggle-day {
+  opacity: 1;
+  transform: none;
+}
+
+[data-mode="day"] .toggle-night {
+  opacity: 0;
+  transform: rotate(40deg) scale(0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-glyph > svg {
+    transition: none;
+  }
+}
